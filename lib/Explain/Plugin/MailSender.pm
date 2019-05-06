@@ -1,13 +1,9 @@
 package Explain::Plugin::MailSender;
 
 use Mojo::Base 'Mojolicious::Plugin';
-
-# Mail Sender is broken on new perls, and I can't migrate to another mail sending module now (vacation time)
-BEGIN {
-    eval {
-        require Email::Sender;
-    };
-}
+use English -no_match_vars;
+use Email::Sender::Simple qw(sendmail);
+use Email::Simple;
 
 __PACKAGE__->attr( config => sub { {} } );
 
@@ -22,64 +18,28 @@ sub register {
         send_mail => sub {
             my ( $controller, $mail ) = @_;
 
-            # update mail params with config values
-            for ( qw( smtp port subject from to cc bcc replyto confirm ) ) {
+            eval {
+                my $email = Email::Simple->create(
+                    header => [
+                        To      => $self->config->{'to'},
+                        From    => $self->config->{'from'},
+                        Subject => $self->config->{'subject'},
+                    ],
+                    body => $mail->{'msg'},
+                );
 
-                # skip if not set in config
-                next unless $self->config->{ $_ };
+                # log debug message
+                $controller->app->log->debug( sprintf "Sending mail:\n%s", $controller->dumper( $email ) );
 
-                # update mail unless value not set directly
-                $mail->{ $_ } ||= $self->config->{ $_ };
-            }
+                sendmail($email);
+            };
 
-            # set default smtp
-            $mail->{ smtp } ||= '127.0.0.1';
-
-            # set mail charset and content type
-            $mail->{ charset } = 'utf-8';
-            $mail->{ ctype }   = 'text/plain';
-
-            # log debug message
-            $controller->app->log->debug( sprintf "Sending mail:\n%s", $controller->dumper( $mail ) );
-
-            # create Email::Sender instance
-            my $sender = Email::Sender->new(
-                {
-                    smtp => delete $mail->{ smtp },
-                    from => delete $mail->{ from }
-                }
-            );
-
-            # unable to create instance
-            unless ( ref $sender ) {
-
-                # error message
-                my $message = qq|Can't create Email::Sender instance, reason: [$sender] "$Email::Sender::Error"|;
-
-                # log error message
+            if ( $EVAL_ERROR ) {
+                my $message = "Mail send failed, reason: " . $EVAL_ERROR;
                 $controller->app->log->fatal( $message );
-
-                # die
                 die $message;
             }
 
-            # send mail
-            my $result = $sender->MailMsg( $mail );
-
-            # unable to sent mail
-            unless ( ref $result ) {
-
-                # error message
-                my $message = qq|Mail send failed, reason: [$result] "$Email::Sender::Error"|;
-
-                # log error message
-                $controller->app->log->fatal( $message );
-
-                # die
-                die $message;
-            }
-
-            # success
             return 1;
         }
     );
