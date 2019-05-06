@@ -5,7 +5,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 # Mail Sender is broken on new perls, and I can't migrate to another mail sending module now (vacation time)
 BEGIN {
     eval {
-        require Mail::Sender;
+        require Email::Sender;
     };
 }
 
@@ -42,8 +42,8 @@ sub register {
             # log debug message
             $controller->app->log->debug( sprintf "Sending mail:\n%s", $controller->dumper( $mail ) );
 
-            # create Mail::Sender instance
-            my $sender = Mail::Sender->new(
+            # create Email::Sender instance
+            my $sender = Email::Sender->new(
                 {
                     smtp => delete $mail->{ smtp },
                     from => delete $mail->{ from }
@@ -54,7 +54,7 @@ sub register {
             unless ( ref $sender ) {
 
                 # error message
-                my $message = qq|Can't create Mail::Sender instance, reason: [$sender] "$Mail::Sender::Error"|;
+                my $message = qq|Can't create Email::Sender instance, reason: [$sender] "$Email::Sender::Error"|;
 
                 # log error message
                 $controller->app->log->fatal( $message );
@@ -70,7 +70,7 @@ sub register {
             unless ( ref $result ) {
 
                 # error message
-                my $message = qq|Mail send failed, reason: [$result] "$Mail::Sender::Error"|;
+                my $message = qq|Mail send failed, reason: [$result] "$Email::Sender::Error"|;
 
                 # log error message
                 $controller->app->log->fatal( $message );
