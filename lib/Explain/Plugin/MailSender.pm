@@ -21,17 +21,17 @@ sub register {
             eval {
                 my $email = Email::Simple->create(
                     header => [
-                        To      => $self->config->{'to'},
-                        From    => $self->config->{'from'},
-                        Subject => $self->config->{'subject'},
+                        To      => $self->config->{ 'to' },
+                        From    => $self->config->{ 'from' },
+                        Subject => $self->config->{ 'subject' },
                     ],
-                    body => $mail->{'msg'},
+                    body => $mail->{ 'msg' },
                 );
 
                 # log debug message
                 $controller->app->log->debug( sprintf "Sending mail:\n%s", $controller->dumper( $email ) );
 
-                sendmail($email);
+                sendmail( $email );
             };
 
             if ( $EVAL_ERROR ) {

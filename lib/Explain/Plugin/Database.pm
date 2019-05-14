@@ -87,7 +87,7 @@ sub user_login {
     my $crypted = crypt( $password, $row[ 0 ] );
 
     return if $crypted ne $row[ 0 ];
-    return { 'admin' => $row[1] };
+    return { 'admin' => $row[ 1 ] };
 }
 
 sub user_change_password {
@@ -262,10 +262,9 @@ sub get_plan {
 
 sub get_optimization_path {
     my $self = shift;
-    my ($plan_id) = @_;
+    my ( $plan_id ) = @_;
 
-    my $rows = $self->dbh->selectall_arrayref(
-        '
+    my $rows = $self->dbh->selectall_arrayref( '
             WITH RECURSIVE path AS (
                 SELECT id, title, optimization_for, 0 as level FROM plans WHERE id = ? and not is_deleted
                 union all
@@ -290,9 +289,9 @@ sub get_optimization_path {
 }
 
 sub get_optimizations_for {
-    my $self = shift;
-    my ($plan_id) = @_;
-    my $rows = $self->dbh->selectall_arrayref(
+    my $self        = shift;
+    my ( $plan_id ) = @_;
+    my $rows        = $self->dbh->selectall_arrayref(
         'select id, title from plans where optimization_for = ? and not is_deleted',
         { Slice => {} },
         $plan_id

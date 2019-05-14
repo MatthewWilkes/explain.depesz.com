@@ -1,3 +1,4 @@
 log
 explain.production.json
 .vagrant
+*.beforeTidy

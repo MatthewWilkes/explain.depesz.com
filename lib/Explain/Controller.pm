@@ -153,7 +153,7 @@ sub login {
 
     if ( my $user = $self->database->user_login( $username, $password ) ) {
         $self->flash( 'message' => 'User logged in.' );
-        $self->session( 'user' => $username );
+        $self->session( 'user'  => $username );
         $self->session( 'admin' => $user->{ 'admin' } );
         $self->redirect_to( 'new-explain' );
     }
@@ -172,9 +172,9 @@ sub new_optimization {
 
     return $self->redirect_to( 'new-explain', status => 404 ) unless $original_plan;
 
-    $self->stash->{ 'optimization' } = 1;
+    $self->stash->{ 'optimization' }     = 1;
     $self->stash->{ 'original_plan_id' } = $original_plan_id;
-    $self->stash->{ 'original_title' } = $original_title;
+    $self->stash->{ 'original_title' }   = $original_title;
 
     return $self->render( 'controller/index' );
 }
@@ -332,7 +332,7 @@ sub show {
 
     # Fetch path of optimizations
     $self->stash->{ optimization_path } = $self->database->get_optimization_path( $id );
-    $self->stash->{ suboptimizations } = $self->database->get_optimizations_for( $id );
+    $self->stash->{ suboptimizations }  = $self->database->get_optimizations_for( $id );
 
     # render will be called automatically
     return;
@@ -403,15 +403,17 @@ sub info {
         next if $module =~ m{^\.?/};
         $module =~ s/\.pm$//;
         $module =~ s#/#::#g;
-        push @versions, {
-            'module' => $module,
+        push @versions,
+            {
+            'module'  => $module,
             'version' => $module->VERSION,
-        };
+            };
     }
     $self->stash( 'modules' => \@versions );
-    $self->stash( 'perl' => {
+    $self->stash(
+        'perl' => {
             'version' => $PERL_VERSION,
-            'binary'  => $Config{'perlpath'} . $Config{'_exe'},
+            'binary'  => $Config{ 'perlpath' } . $Config{ '_exe' },
         }
     );
 
@@ -419,10 +421,11 @@ sub info {
 
 sub status {
     my $self = shift;
-    if ($self->database->ping()) {
-        $self->render('text' => 'OK', status => 200);
-    } else {
-        $self->render('text' => 'DB FAILED', status => 500);
+    if ( $self->database->ping() ) {
+        $self->render( 'text' => 'OK', status => 200 );
+    }
+    else {
+        $self->render( 'text' => 'DB FAILED', status => 500 );
     }
 }
 
