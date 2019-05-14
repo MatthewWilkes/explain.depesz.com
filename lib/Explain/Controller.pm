@@ -367,6 +367,11 @@ sub contact {
     return $self->render( error => 'Invalid email address' )
         unless Email::Valid->address( $self->req->param( 'email' ) || '' );
 
+    my $client_ip = $self->tx->remote_address;
+    if ( my $forward = $self->req->headers->header( 'x-forwarded-for' ) ) {
+        $client_ip .= sprintf " (from: %s)", $forward;
+    }
+
     # send
     $self->send_mail(
         {
@@ -374,7 +379,7 @@ sub contact {
                 "\nMessage from: %s <%s>" . "\nPosted  from: %s with %s" . "\n****************************************\n\n" . "%s",
                 $self->req->param( 'name' ) || '',
                 $self->req->param( 'email' ),
-                $self->tx->remote_address,
+                $client_ip,
                 $self->req->headers->user_agent,
                 $self->req->param( 'message' )
             )
