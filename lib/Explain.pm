@@ -37,6 +37,9 @@ sub startup {
     # load number_format plugin
     $self->plugin( 'number_format' );
 
+    # Plugin to check if static file exists
+    $self->plugin( 'Explain::Plugin::StaticExists' );
+
     # routes
     my $routes = $self->routes;
 
@@ -74,7 +77,8 @@ sub startup {
     $routes->route( '/history/:date' )->to( 'controller#history', date => '' )->name( 'history' );
 
     # route: 'contact'
-    $routes->route( '/contact' )->to( 'controller#contact' )->name( 'contact' );
+    $routes->get( '/contact' )->to( 'controller#contact' )->name( 'contact' );
+    $routes->post( '/contact' )->to( 'controller#contact_post' )->name( 'contact_post' );
 
     # route: 'help'
     $routes->route( '/help' )->to( 'controller#help' )->name( 'help' );

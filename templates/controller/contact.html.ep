@@ -11,13 +11,21 @@
 </div>
 % }
 
-% if ( stash 'error' ) {
+% if ( flash 'error' ) {
 <div class="message">
-    <p class="error"><%= stash 'error' =%></p>
+    <p class="message messageSimple"><%= flash 'error' =%></p>
 </div>
 % }
 
-<form id="contact" method="post" action="<%= url_for 'current' %>">
+% if ( stash 'error' ) {
+<div class="message">
+    <p class="message messageSimple"><%= stash 'error' =%></p>
+</div>
+% }
+
+<form id="contact" method="post" action="<%= url_for 'contact_post' %>">
+    <input type="hidden" id='nonce' name="nonce" value="<%= stash 'nonce' %>"/>
+    <input type="hidden" id='nonceprefix' name="nonceprefix"/>
 
     <div class="fe fe-first fe_name">
         <label for="name">Your name</label>

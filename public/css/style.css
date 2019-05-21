@@ -30,7 +30,6 @@ button {overflow:visible;width:0}
 
 button[type] {width:auto}
 
-
 /*
  * typography
  */
@@ -425,3 +424,4 @@ div.plea { float: right; color: #666; }
 .user-history .row .action button:hover span  {color:#fff;cursor:pointer}
 
 .user-history div.date              {background:#ddd;text-align:center;font-style:italic;color:#333;}
+

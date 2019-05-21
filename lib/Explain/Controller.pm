@@ -8,6 +8,7 @@ use Pg::Explain;
 use Encode;
 use Email::Valid;
 use Config;
+use Digest::MD5 qw( md5_hex );
 
 sub logout {
     my $self = shift;
@@ -357,11 +358,36 @@ sub history {
     return;
 }
 
-sub contact {
+sub contact_post {
     my $self = shift;
 
-    # nothing to do...
-    return unless $self->req->param( 'message' );
+    return $self->redirect_to( 'contact' ) unless $self->req->param( 'message' );
+
+    my $session_nonce = $self->session->{ 'nonce' };
+    my $param_nonce   = $self->req->param( 'nonce' );
+    my $prefix        = $self->req->param( 'nonceprefix' );
+
+    if (   ( !defined $session_nonce )
+        || ( !defined $param_nonce )
+        || ( $session_nonce ne $param_nonce ) )
+    {
+        $self->flash( error => "Please don't hack me" );
+        return $self->redirect_to( 'contact' );
+    }
+    if (   ( !defined $prefix )
+        || ( $prefix eq '' ) )
+    {
+        $self->flash( error => "Sorry, due to contact spam, you need JavaScript to contact me." );
+        return $self->redirect_to( 'contact' );
+    }
+
+    my ( $level, $nonce ) = split( /:/, $session_nonce );
+    my $md5_prefix = substr( md5_hex( $prefix . $nonce ), 0, $level );
+    $md5_prefix =~ s/0//g;
+    if ( $md5_prefix ne '' ) {
+        $self->flash( error => "Please don't hack me" );
+        return $self->redirect_to( 'contact' );
+    }
 
     # invalid email address
     return $self->render( error => 'Invalid email address' )
@@ -391,6 +417,17 @@ sub contact {
 
     # get after post
     $self->redirect_to( 'contact' );
+}
+
+sub contact {
+    my $self = shift;
+
+    my @chars = ( "a" .. "z", "A" .. "Z", "0" .. "9" );
+    my $level = 2;
+    my $nonce = $level . ':' . join( '', map { $chars[ rand @chars ] } 1 .. 20 );
+    $self->stash->{ 'nonce' }   = $nonce;
+    $self->session->{ 'nonce' } = $nonce;
+    return;
 }
 
 sub info {
