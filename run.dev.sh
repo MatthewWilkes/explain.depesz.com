@@ -16,22 +16,25 @@ ssh_ident_agent_env="${HOME}/.ssh/agents/agent-priv-$( hostname -s )"
 # Check if the session already exist, and if yes - attach, with no changes
 tmux has-session -t "${project_name}" 2> /dev/null && exec tmux attach-session -t "${project_name}"
 
-tmux new-session -d -s "$project_name" -n "shell"
-
+tmux new-session -d -s "${project_name}" -n "morbo"
 tmux bind-key c new-window -c "#{pane_current_path}" -a
 
-tmux new-window -d -n morbo -t 99
-tmux split-window -d -t morbo
-tmux select-pane -t morbo.0
+tmux new-window -d -n shell -t "${project_name}"
 
-tmux new-window -d -n "lib" -t 2 -c "${work_dir}/lib/"
-tmux new-window -d -n "templates" -t 3 -c "${work_dir}/templates/"
+for dir in lib templates public/css public/js
+do
+    tmux new-window -d -n "${dir##*/}" -t "${project_name}" -c "${work_dir}/${dir}/"
+done
 
-tmux send-keys -t morbo.0 "morbo -v -l http://*:25634 ${project_name}.pl" Enter
+tmux split-window -d -t "${project_name}:morbo"
 
-tmux send-keys -t morbo.1 "tail -F log/development.log" Enter
+tmux send-keys -t "${project_name}:morbo.0" "morbo -v -l http://*:25634 ${project_name}.pl" Enter
 
-tmux send-keys -t lib "vim ." Enter
-tmux send-keys -t templates "vim ." Enter
+tmux send-keys -t "${project_name}:morbo.1" "tail -F log/development.log" Enter
 
-tmux attach-session -t "$project_name"
+for d in shell lib templates css js
+do
+    tmux send-keys -t "${project_name}:${d}" "ls -l" Enter
+done
+
+tmux attach-session -t "${project_name}"
