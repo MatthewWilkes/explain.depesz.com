@@ -6,8 +6,8 @@
 <h1><%= $title =%></h1>
 
 % if ( flash 'message' ) {
-<div class="message">
-    <p class="message"><%= flash 'message' =%></p>
+<div class="message messageNice">
+    <p class="message messageSimple"><%= flash 'message' =%></p>
 </div>
 % }
 
