@@ -23,31 +23,37 @@
 </div>
 % }
 
-<form id="contact" method="post" action="<%= url_for 'contact_post' %>">
-    <input type="hidden" id='nonce' name="nonce" value="<%= stash 'nonce' %>"/>
-    <input type="hidden" id='nonceprefix' name="nonceprefix"/>
+<div id="contactWait">
+    <p>Checking if you can send contact form...</p>
+    <p class="hint">If you're seeing this message for over 10 seconds, something is wrong.</p>
+</div>
 
-    <div class="fe fe-first fe_name">
-        <label for="name">Your name</label>
-        <input type="text" class="text" id="name" name="name" value="<%= param 'name' =%>" />
-    </div>
+<div id="contactForm">
+    <form id="contact" method="post" action="<%= url_for 'contact_post' %>">
+        <input type="hidden" id='nonce' name="nonce" value="<%= stash 'nonce' %>"/>
+        <input type="hidden" id='nonceprefix' name="nonceprefix"/>
 
-    <div class="fe fe_email">
-        <label for="email">Your email <sup class="fe-required">*</sup></label></dt>
-        <input type="text" class="text" id="email" name="email" value="<%= param 'email' =%>" />
-    </div>
+        <div class="fe fe-first fe_name">
+            <label for="name">Your name</label>
+            <input type="text" class="text" id="name" name="name" value="<%= param 'name' =%>" />
+        </div>
 
-    <div class="fe fe_message">
-        <label for="message">Message <sup class="fe-required">*</sup></label>
-        <textarea id="message" name="message"><%= param 'message' =%></textarea>
-    </div>
+        <div class="fe fe_email">
+            <label for="email">Your email <sup class="fe-required">*</sup></label></dt>
+            <input type="text" class="text" id="email" name="email" value="<%= param 'email' =%>" />
+        </div>
 
-    <div class="fe fe-last fe-buttons">
-        <button type="submit" id="send_email" name="send_email"><span>Send</span></button>
-    </div>
+        <div class="fe fe_message">
+            <label for="message">Message <sup class="fe-required">*</sup></label>
+            <textarea id="message" name="message"><%= param 'message' =%></textarea>
+        </div>
 
-    <p>Or you can simply mail me at <a href="mailto:depesz@depesz.com">depesz@depesz.com</a></p>
+        <div class="fe fe-last fe-buttons">
+            <button type="submit" id="send_email" name="send_email"><span>Send</span></button>
+        </div>
 
-    <p class="nfo-required">All fields marked by <sup class="fe-required">*</sup> are required.</p>
+        <p class="nfo-required">All fields marked by <sup class="fe-required">*</sup> are required.</p>
+    </form>
+</div>
 
-</form>
+<p>Alternatively, you can simply mail me at <a href="mailto:depesz@depesz.com">depesz@depesz.com</a>.</p>

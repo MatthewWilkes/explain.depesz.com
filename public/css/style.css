@@ -425,3 +425,7 @@ div.plea { float: right; color: #666; }
 
 .user-history div.date              {background:#ddd;text-align:center;font-style:italic;color:#333;}
 
+#contactForm { display: none; }
+#contactWait { border: 2px solid #00f; padding: 0.5em; text-align: center; background: #006; margin: 1em; padding: 1em;}
+#contactWait p { font-weight: bold; font-size: 2em; color: #ccc; padding: 0; margin: 0; margin-bottom: 1em; }
+#contactWait p.hint { font-weight: normal; font-size: 1.5em; margin-bottom: 0em; }
