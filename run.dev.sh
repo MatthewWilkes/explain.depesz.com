@@ -18,6 +18,8 @@ tmux has-session -t "${project_name}" 2> /dev/null && exec tmux attach-session -
 
 tmux new-session -d -s "$project_name" -n "shell"
 
+tmux bind-key c new-window -c "#{pane_current_path}" -a
+
 tmux new-window -d -n morbo -t 99
 tmux split-window -d -t morbo
 tmux select-pane -t morbo.0
