@@ -398,15 +398,24 @@ sub contact_post {
         $client_ip .= sprintf " (from: %s)", $forward;
     }
 
+    my @mail_template_lines = ();
+    push @mail_template_lines, 'Message from: %s <%s>';
+    push @mail_template_lines, 'Posted  from: %s with %s';
+    push @mail_template_lines, 'Prefix: %s';
+    push @mail_template_lines, '***********************************************';
+    push @mail_template_lines, '%s';
+    my $mail_template = "\n" . join( "\n", @mail_template_lines ) . "\n\n";
+
     # send
     $self->send_mail(
         {
             msg => sprintf(
-                "\nMessage from: %s <%s>" . "\nPosted  from: %s with %s" . "\n****************************************\n\n" . "%s",
+                $mail_template,
                 $self->req->param( 'name' ) || '',
                 $self->req->param( 'email' ),
                 $client_ip,
                 $self->req->headers->user_agent,
+                $prefix,
                 $self->req->param( 'message' )
             )
         }
