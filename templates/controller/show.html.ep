@@ -217,6 +217,9 @@
                         % elsif ( 'CTE Scan' eq $node->type ) {
                             on <%= $node->scan_on->{ cte_name } %> <%= $node->scan_on->{ cte_alias } || '' %>
                         % }
+                        % elsif ( 'WorkTable Scan' eq $node->type ) {
+                            on <%= $node->scan_on->{ worktable_name } %> <%= $node->scan_on->{ worktable_alias } || '' %>
+                        % }
                         % elsif ( 'Function Scan' eq $node->type ) {
                             on <%= $node->scan_on->{ function_name } %> <%= $node->scan_on->{ function_alias } || '' %>
                         % }
