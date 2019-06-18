@@ -41,7 +41,6 @@
 % my $full_title = $title ? "$id : $title" : $id;
 % title $full_title;
 
-
 %# c = e|i|x|m (colorize = exclusive|inclusive|rows-x|mixed)
 %# ve   - visibility of "exclusive" column
 %# vi   - visibility of "inclusive" column
@@ -79,6 +78,8 @@
 % $block = begin
 %
 %   my ( $node, $level, $parent ) = @_;
+%   my $full_execution_time = $explain->top_node->execution_time       ? $explain->top_node->execution_time :
+%                             $explain->top_node->total_inclusive_time ? $explain->top_node->total_inclusive_time : 0;
 %
 %   $level ||= 0;
 %   $parent  = '' unless defined $parent;
@@ -88,14 +89,14 @@
 %
 %   if ( $explain->top_node->total_inclusive_time && defined( $node->total_exclusive_time ) && defined( $node->total_inclusive_time ) && $node->total_exclusive_time ne '' && $node->total_inclusive_time ne '' ) {
 %
-%       $exclusive_point = $node->total_exclusive_time / $explain->top_node->total_inclusive_time;
+%       $exclusive_point = $node->total_exclusive_time / $full_execution_time;
 %
 %          if ( $exclusive_point > 0.9 ) { $exclusive_point = 4; }
 %       elsif ( $exclusive_point > 0.5 ) { $exclusive_point = 3; }
 %       elsif ( $exclusive_point > 0.1 ) { $exclusive_point = 2; }
 %       else                             { $exclusive_point = 1; }
 %
-%       $inclusive_point = $node->total_inclusive_time / $explain->top_node->total_inclusive_time;
+%       $inclusive_point = $node->total_inclusive_time / $full_execution_time;
 %
 %          if ( $inclusive_point > 0.9 ) { $inclusive_point = 4; }
 %       elsif ( $inclusive_point > 0.5 ) { $inclusive_point = 3; }
@@ -508,6 +509,55 @@
                 %== $block->( $explain->top_node );
             </tbody>
         </table>
+
+% if ( (defined $explain->top_node->planning_time) || (defined $explain->top_node->execution_time) ) {
+% my $trclass="single";
+% $trclass="both" if (defined $explain->top_node->planning_time) && (defined $explain->top_node->execution_time);
+<table id="total-times">
+    % if (defined $explain->top_node->planning_time) {
+    <tr class="<%= $trclass %> planning">
+        <th>Planning time</th>
+        <td class="separator">:</td>
+        <td class="value"><%= commify_numbers( $explain->top_node->planning_time ) %> ms</td>
+    </tr>
+    % }
+    % if (defined $explain->top_node->execution_time) {
+    <tr class="<%= $trclass %> execution">
+        <th>Execution time</th>
+        <td class="separator">:</td>
+        <td><span class="value"><%= commify_numbers( $explain->top_node->execution_time ) %></span> <span class="unit">ms</span></td>
+    </tr>
+    % }
+</table>
+% }
+
+% if ( defined $explain->top_node->trigger_times ) {
+%   my $full_execution_time = $explain->top_node->execution_time       ? $explain->top_node->execution_time :
+%                             $explain->top_node->total_inclusive_time ? $explain->top_node->total_inclusive_time : 0;
+<table id="trigger-times">
+    <thead>
+        <tr><th colspan="4" class="top">Trigger times:</th></tr>
+        <tr><th>Trigger Name:</th><th>Total time:</th><th>Calls:</th><th>Average time:</th></tr>
+    </thead>
+    <tbody>
+        % for my $trg ( @{ $explain->top_node->trigger_times } ) {
+        % my $row_color = 1;
+        % if ( $full_execution_time ) {
+            % my $trigger_point = $trg->{'time'} / $full_execution_time;
+            % if ( $trigger_point > 0.9 )    { $row_color = 4; }
+            % elsif ( $trigger_point > 0.5 ) { $row_color = 3; }
+            % elsif ( $trigger_point > 0.1 ) { $row_color = 2; }
+        % }
+        <tr class="c-<%= $row_color %>">
+                <th class="name"><%= $trg->{'name'} %></th>
+                <td class="time"><span class="value"><%= commify_numbers( sprintf '%.03f', $trg->{'time'} ) %></span> <span class="unit">ms</span></td>
+                <td class="count"><span class="value"><%= $trg->{'calls'} %></span></td>
+                <td class="time"><span class="value"><%= commify_numbers( sprintf '%.03f', $trg->{'time'} / $trg->{'calls'} ) %></span> <span class="unit">ms</span></td>
+            </tr>
+        % }
+    </tbody>
+</table>
+% }
     </div>
 
     <div class="result-text hidden">
