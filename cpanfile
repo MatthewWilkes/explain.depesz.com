@@ -1,5 +1,5 @@
 # This file is used by cpanm.
-# To install dependencies, run >> cpanm --installdeps . <<, or something similar, depending on your setup.
+# To install dependencies, run >> cpanm --local-lib ~/perl5 --installdeps . <<, or something similar, depending on your setup.
 #
 # More details:
 # https://metacpan.org/pod/cpanfile
