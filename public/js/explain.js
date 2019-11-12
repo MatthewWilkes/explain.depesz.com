@@ -198,6 +198,7 @@
             if ( 'text' == view.toLowerCase( ) ) {
                 result.find( 'div.result-html' ).hide( );
                 result.find( 'div.result-stats' ).hide( );
+                result.find( 'div.result-source' ).hide( );
                 result.find( 'div.result-text' ).show( );
                 return;
             }
@@ -205,11 +206,21 @@
             if ( 'html' == view.toLowerCase( ) ) {
                 result.find( 'div.result-html' ).show( );
                 result.find( 'div.result-stats' ).hide( );
+                result.find( 'div.result-source' ).hide( );
+                result.find( 'div.result-text' ).hide( );
+                return;
+            }
+
+            if ( 'source' == view.toLowerCase( ) ) {
+                result.find( 'div.result-html' ).hide( );
+                result.find( 'div.result-stats' ).hide( );
+                result.find( 'div.result-source' ).show( );
                 result.find( 'div.result-text' ).hide( );
                 return;
             }
 
             result.find( 'div.result-html' ).hide( );
+            result.find( 'div.result-source' ).hide( );
             result.find( 'div.result-stats' ).show( );
             result.find( 'div.result-text' ).hide( );
         },

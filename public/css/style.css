@@ -214,7 +214,9 @@ div.explain-form a:hover    {background:#e5ecf9}
 *:first-child+html #explain-form input {border:0}
 
 .result                         {margin:0;padding:0}
- .result-text, .result-html, .result-stats     {margin:0;padding:0;border:1px solid #ccc;overflow:auto}
+ .result-text, .result-source, .result-html, .result-stats     {margin:0;padding:0;border:1px solid #ccc;overflow:auto}
+ .result-source                   {background:#222 url('../img/code-bg.gif');color:#fff}
+ .result-source pre               {margin:0;padding:1em}
  .result-text                   {background:#222 url('../img/code-bg.gif');color:#fff}
  .result-text pre               {margin:0;padding:1em}
 

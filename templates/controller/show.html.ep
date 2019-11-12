@@ -453,12 +453,20 @@
                    onclick="$( this ).explain( 'toggleView', 'html', this ); return false;"
                    onkeypress="return this.onclick( );">HTML</a>
             </li>
+            <li class="source">
+                <a href="#source"
+                   title="view source explain"
+                   onclick="$( this ).explain( 'toggleView', 'source', this ); return false;"
+                   onkeypress="return this.onclick( );">SOURCE</a>
+            </li>
+% if ( $explain->source_format ne 'TEXT' ) {
             <li class="text">
                 <a href="#text"
-                   title="view plain text"
+                   title="view as text explain"
                    onclick="$( this ).explain( 'toggleView', 'text', this ); return false;"
                    onkeypress="return this.onclick( );">TEXT</a>
             </li>
+% }
             <li class="stats">
                 <a href="#stats"
                    title="view plan stats"
@@ -565,9 +573,15 @@
 % }
     </div>
 
-    <div class="result-text hidden">
-        <pre id="source"><%= $explain->source =%></pre>
+    <div class="result-source hidden">
+        <pre id="source"><code class="<%= lc( $explain->source_format ) =%>"><%= $explain->source =%></code></pre>
     </div>
+
+% if ( $explain->source_format ne 'TEXT' ) {
+    <div class="result-text hidden">
+        <pre id="text"><%= $explain->as_text =%></pre>
+    </div>
+% }
 
     <div class="result-stats hidden">
         <h1>Per node type stats</h1>
@@ -630,11 +644,14 @@
 </div>
 
 <% content_for 'head' => begin %>
+    <link rel="stylesheet" href="<%= url_for '/' %>css/highlight-styles/tomorrow-night.css">
+    <script src="<%= url_for '/' %>js/highlight.pack.js"></script>
     <script>
         $( document ).ready( function( ) {
 
             /* startup */
             $.fn.explain( 'init', $( '#explain-form' ), $( '#explain' ) );
+            hljs.initHighlightingOnLoad();
 
         } );
     </script>
