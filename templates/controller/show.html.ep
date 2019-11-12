@@ -78,8 +78,7 @@
 % $block = begin
 %
 %   my ( $node, $level, $parent ) = @_;
-%   my $full_execution_time = $explain->top_node->execution_time       ? $explain->top_node->execution_time :
-%                             $explain->top_node->total_inclusive_time ? $explain->top_node->total_inclusive_time : 0;
+%   my $full_execution_time = $explain->runtime || 0;
 %
 %   $level ||= 0;
 %   $parent  = '' unless defined $parent;
@@ -305,7 +304,7 @@
             <td class="l<%= $cfg->{ vl } ? '' : ' tight' %>"><span>&nbsp;</span></td>
             <td class="n">
                 <div class="n" style="margin-left:<%= $margin =%>px">
-                    <p><span>Initplan (for <%= $node->type =%>)</span></p>
+                    <p><span>Initplan (for <%= $node->type %>)</span></p>
                 </div>
             </td>
         </tr>
@@ -334,7 +333,7 @@
             <td class="l<%= $cfg->{ vl } ? '' : ' tight' %>"><span>&nbsp;</span></td>
             <td class="n">
                 <div class="n" style="margin-left:<%= $margin =%>px">
-                    <p><span>SubPlan (for <%= $node->type =%>)</span></p>
+                    <p><span>SubPlan (for <%= $node->type %>)</span></p>
                 </div>
             </td>
         </tr>
@@ -510,37 +509,43 @@
             </tbody>
         </table>
 
-% if ( (defined $explain->top_node->planning_time) || (defined $explain->top_node->execution_time) ) {
+% if ( (defined $explain->planning_time) || (defined $explain->execution_time) || (defined $explain->total_runtime) ) {
 % my $trclass="single";
-% $trclass="both" if (defined $explain->top_node->planning_time) && (defined $explain->top_node->execution_time);
+% $trclass="both" if (defined $explain->planning_time) && (defined $explain->execution_time);
 <table id="total-times">
-    % if (defined $explain->top_node->planning_time) {
+    % if (defined $explain->planning_time) {
     <tr class="<%= $trclass %> planning">
         <th>Planning time</th>
         <td class="separator">:</td>
-        <td class="value"><%= commify_numbers( $explain->top_node->planning_time ) %> ms</td>
+        <td class="value"><%= commify_numbers( $explain->planning_time ) %> ms</td>
     </tr>
     % }
-    % if (defined $explain->top_node->execution_time) {
+    % if (defined $explain->execution_time) {
     <tr class="<%= $trclass %> execution">
         <th>Execution time</th>
         <td class="separator">:</td>
-        <td><span class="value"><%= commify_numbers( $explain->top_node->execution_time ) %></span> <span class="unit">ms</span></td>
+        <td><span class="value"><%= commify_numbers( $explain->execution_time ) %></span> <span class="unit">ms</span></td>
+    </tr>
+    % }
+    % if (defined $explain->total_runtime) {
+    <tr class="<%= $trclass %> execution">
+        <th>Total runtime</th>
+        <td class="separator">:</td>
+        <td><span class="value"><%= commify_numbers( $explain->total_runtime ) %></span> <span class="unit">ms</span></td>
     </tr>
     % }
 </table>
 % }
 
-% if ( defined $explain->top_node->trigger_times ) {
-%   my $full_execution_time = $explain->top_node->execution_time       ? $explain->top_node->execution_time :
-%                             $explain->top_node->total_inclusive_time ? $explain->top_node->total_inclusive_time : 0;
+% if ( defined $explain->trigger_times ) {
+%   my $full_execution_time = $explain->runtime || 0;
 <table id="trigger-times">
     <thead>
         <tr><th colspan="4" class="top">Trigger times:</th></tr>
         <tr><th>Trigger Name:</th><th>Total time:</th><th>Calls:</th><th>Average time:</th></tr>
     </thead>
     <tbody>
-        % for my $trg ( @{ $explain->top_node->trigger_times } ) {
+        % for my $trg ( @{ $explain->trigger_times } ) {
         % my $row_color = 1;
         % if ( $full_execution_time ) {
             % my $trigger_point = $trg->{'time'} / $full_execution_time;

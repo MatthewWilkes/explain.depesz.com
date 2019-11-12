@@ -17,6 +17,6 @@ requires 'Encode';
 requires 'English';
 requires 'File::Spec';
 requires 'Mojolicious';
-requires 'Pg::Explain';
+requires 'Pg::Explain', '>= 0.90';
 
 # vim: set ft=perl:
