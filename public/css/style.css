@@ -95,6 +95,13 @@ div.explain-form a:hover    {background:#e5ecf9}
 .result-html table#explain td.n div.ico {position:absolute;top:-4px;left:-22px;width:22px;height:22px;background:url('../img/sprite.png') no-repeat 0px -180px;text-indent:-1000px;overflow:hidden}
 
 /* for "help" */
+.help img { margin-left: 32px; margin-bottom: 21px; border: 1px solid black; padding: 2px;}
+.help p img { margin: 0; padding: 0; }
+.help pre { margin-left: 32px; border: 1px solid black; padding: 2px; }
+.help iframe { margin-left: 32px; border: 1px solid black; padding: 2px; margin-bottom: 21px; }
+.help section h2 { border: 2px solid #ccc; background: #eee; padding: 5px 32px; }
+.help section h3 { font-size: 115%; font-weight: bold; padding: 5px 32px; border-bottom: 1px solid #ccc; }
+.help section h4 { font-weight: bold; padding: 5px 32px; }
 p.slogan         {font-style:italic}
 p strong         {color:#234}
 

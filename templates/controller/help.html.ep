@@ -7,7 +7,7 @@
 
 <p class="slogan"><strong>explain.depesz.com</strong> is a tool for finding real causes for slow queries.</p>
 
-<p>Generally, one would use the <code>EXPLAIN ANALYZE</code> query; and read the output. The problem is
+<p>Generally, one would use the <code>EXPLAIN <strong>ANALYZE</strong></code> query; and read the output. The problem is
 that not all parts of the output are easily understandable by anybody, and it's not always obvious
 whether a node that executes in 17.3ms is faster or slower than the one that runs in 100ms - given the
 fact that the first one is executed 7 times.</p>
@@ -21,6 +21,42 @@ nice for me :) colorized output, to emphasize important parts.</p>
 <p>The url for colorized output is persistent, so you can easily show it to
 others. For example to those nice guys on the irc channel <em>#postgresql</em> on freenode.</p>
 
+<h2>Interactive use</h2>
+
+<p>While viewing explain in the <em>html</em> mode (the default one) you can switch to viewing source, reconstructed textual plan (if your plan was in json/yaml/xml format), and stats for the plan. To do so click on one of the tabs:</p>
+
+<img src="<%= url_for '/' %>img/help-1.png"/>
+
+<p>When hovering over plan, you might notice small stars, like this one: <img src="<%= url_for '/' %>img/star.png"/>. These mark nodes that are direct subnodes (children) of current node.</p>
+
+<p>Additionally you can click on any node line, and it will fold all of its subnodes. For example, with plan like:</p>
+
+<img src="<%= url_for '/' %>img/help-2.png"/>
+
+<p>after you'd click on line 14, you'd get:</p>
+
+<img src="<%= url_for '/' %>img/help-3.png"/>
+
+<p>Clicking again on line 14 will unfold the lines.</p>
+
+<p>Node types (for example: "<a href="http://www.depesz.com/2013/05/09/explaining-the-unexplainable-part-3/#hash-aggregate">HashAggregate</a>", "<a href="http://www.depesz.com/2013/04/27/explaining-the-unexplainable-part-2/#seq-scan">Seq Scan</a>" and others) are clickable, and will direct you to my description of this node type.</p>
+
+<h2>Embedding on another pages</h2>
+
+<p>It is possible to embed plan view on another page.</p>
+
+<p>For example, let's assume you have <a href="https://explain.depesz.com/s/nMS5">a plan</a>. In its link you can see that the plan id is <strong>nMS5</strong>. Knowing this you can add to your page:</p>
+
+<pre>
+&lt;iframe width=800 height=200 src="https://explain.depesz.com/i/nMS5"&gt;&lt;/iframe&gt;
+</pre>
+
+<p>Which will give you, on your site:</p>
+
+<iframe width=800 height=200 src="https://explain.depesz.com/i/nMS5"></iframe>
+
+<h2>Colors</h2>
+
 <p>This graph uses 4 colors to mark important things:</p>
 
 <ul class="colors">
@@ -33,13 +69,13 @@ others. For example to those nice guys on the irc channel <em>#postgresql</em> o
 <p>The color is chosen based on which mode you use: "<strong>Exclusive</strong>",
 "<strong>Inclusive</strong>" or "<strong>Rows X</strong>".</p>
 
-<h2>Exclusive</h2>
+<h3>Exclusive</h3>
 
 <p>This is the total amount of time <a href="http://www.postgresql.org" title="link to PostgreSQL site">PostgreSQL</a> spent
 evaluating this node, without time spent in its subnodes. If the node has been executed many times (for example because
 of a <code>Nested Loop</code> plan), this time will be correctly multiplied.</p>
 
-<h3>Colors:</h3>
+<h4>Colors:</h4>
 
 <ul class="colors">
     <li class="c-1">white background - is chosen if exclusive time &lt;= 10% of total query time</li>
@@ -48,12 +84,12 @@ of a <code>Nested Loop</code> plan), this time will be correctly multiplied.</p>
     <li class="c-4">red background - is chosen if exclusive time &gt; 90% of total query time</li>
 </ul>
 
-<h2>Inclusive</h2>
+<h3>Inclusive</h3>
 
 <p>This is just like <strong>Exclusive</strong>, but it doesn't exclude time of subnodes. So, by definition the top node will
 have <strong>Inclusive</strong> time equal to the total time of the query.</p>
 
-<h3>Colors:</h3>
+<h4>Colors:</h4>
 
 <ul class="colors">
     <li class="c-1">white background - is chosen if inclusive time &lt;= 10% of total query time</li>
@@ -62,7 +98,7 @@ have <strong>Inclusive</strong> time equal to the total time of the query.</p>
     <li class="c-4">red background - is chosen if inclusive time &gt; 90% of total query time</li>
 </ul>
 
-<h2>Rows X</h2>
+<h3>Rows X</h3>
 
 <p>This value stores information about how big the planner's mistake was when it estimated the return row count.</p>
 
@@ -73,7 +109,7 @@ error is 14118/230 == 61.4.</p>
 <strong>Rows X</strong> would be the same. To show whether planner underestimated or overestimated - there is
 an arrow showing either &darr; - if planner underestimated rowcount, or &uarr; if it overestimated.</p>
 
-<h3>Colors:</h3>
+<h4>Colors:</h4>
 
 <ul class="colors">
     <li class="c-1">white background - is chosen if rows-x &lt;= 10</li>
