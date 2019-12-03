@@ -1,0 +1,21 @@
+<!doctype html>
+<% $c->res->headers->header( 'X-Frame-Options' => 'Allow' ); %>
+<html lang="en">
+
+%= include 'includes/layout_head', 'style' => 'iframe'
+
+    <body class="<%= $self->match->endpoint->name %>">
+        <!-- wrapper -->
+        <div id="wrapper">
+
+            <section>
+                <%= content %>
+            </section>
+
+%= include 'includes/layout_footer'
+
+        </div>
+        <!-- /wrapper -->
+
+    </body>
+</html>

@@ -70,6 +70,9 @@ sub startup {
     # route: 'show'
     $routes->route( '/s/:id' )->to( 'controller#show', id => '' )->name( 'show' );
 
+    # route: 'iframe'
+    $routes->route( '/i/:id' )->to( 'controller#show', id => '' )->name( 'iframe' );
+
     # route: 'delete'
     $routes->route( '/d/:id/:key' )->to( 'controller#delete', id => '', key => '' )->name( 'delete' );
 

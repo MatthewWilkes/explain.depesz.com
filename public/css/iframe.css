@@ -1,0 +1,24 @@
+/*
+ * layout
+ */
+body {background:#fff;color:#f0f0f0}
+
+#wrapper {text-align:center}
+
+header, nav, section {position:relative;color:#16212b;text-align:left}
+
+section { padding:5px; }
+
+.result-text, .result-source, .result-html, .result-stats     {margin:0;padding:0;overflow:visible}
+
+/* all ico(ns) */
+.result-html table#explain td.n div.ico {position:absolute;top:-4px;left:-22px;width:22px;height:22px;background:url('../img/sprite.png') no-repeat 0px -180px;text-indent:-1000px;overflow:visible}
+
+footer                  {padding-top:15px;}
+footer div              {padding-top:10px;}
+footer p                {text-shadow:#eee 0px 1px 2px}
+footer p,
+footer a                {color:#cccccc}
+footer a:hover          {color:#888}
+
+#main-site-link { border: 1px solid red; position:absolute; background: #eee; padding: 4px; opacity: 0.5; -moz-border-radius:19px/19px; border-radius:19px/19px; top: 5px; right: 5px; }

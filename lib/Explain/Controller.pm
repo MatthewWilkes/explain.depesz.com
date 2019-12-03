@@ -273,7 +273,7 @@ sub show {
     my $self = shift;
 
     # value of "/:id" param
-    my $id = defined $self->stash->{ id } ? $self->stash->{ id } : '';
+    my $id     = defined $self->stash->{ id } ? $self->stash->{ id } : '';
 
     # missing or invalid
     return $self->redirect_to( 'new-explain' ) unless $id =~ m{\A[a-zA-Z0-9]+\z};
@@ -303,7 +303,7 @@ sub show {
     }
 
     # Get stats from plan
-    my $stats = { 'tables' => {} };
+    my $stats    = { 'tables' => {} };
     my @elements = ( $explain->top_node );
     while ( my $e = shift @elements ) {
         push @elements, values %{ $e->ctes } if $e->ctes;
@@ -336,6 +336,9 @@ sub show {
     $self->stash->{ suboptimizations }  = $self->database->get_optimizations_for( $id );
 
     # render will be called automatically
+
+    return $self->render( 'controller/iframe' ) if 'iframe' eq $self->match->endpoint->name;
+
     return;
 }
 
