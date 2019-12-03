@@ -21,4 +21,6 @@ footer p,
 footer a                {color:#cccccc}
 footer a:hover          {color:#888}
 
-#main-site-link { border: 1px solid red; position:absolute; background: #eee; padding: 4px; opacity: 0.5; -moz-border-radius:19px/19px; border-radius:19px/19px; top: 5px; right: 5px; }
+#main-site-link { border: 2px solid #06c; position:absolute; background: #eee; padding: 4px 10px; -moz-border-radius:19px/19px; border-radius:19px/19px; top: 5px; right: 5px; }
+#main-site-link a { color: #06c; }
+#main-site-link strong { font-weight:bold; }

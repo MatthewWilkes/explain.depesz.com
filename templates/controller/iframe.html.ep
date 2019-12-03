@@ -345,7 +345,12 @@
 
 % end;
 
-<div id="main-site-link"><a href="<%= url_for( 'show', id => $id ) =%>" title="Go to main explain.depesz.com site" target=_new><img src="<%= url_for '/' %>img/home.png" width=32 height=32 alt="go to explain.depesz.com"></a></div>
+% my $full_hostname = $self->config->{'title'} // $self->req->url->to_abs->host;
+% my @hostname_parts = split( /\./, $full_hostname, 2 );
+<div id="main-site-link"><a href="<%= url_for( 'show', id => $id ) =%>" title="Go to main explain.depesz.com site" target=_new>
+                        <strong><%= $hostname_parts[0] %></strong>.<%= $hostname_parts[1] %>
+    </a></div>
+
 
 <div class="result">
 
