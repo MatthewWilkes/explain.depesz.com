@@ -89,6 +89,13 @@ commit;
 
 vacuum analyze plans;
 
-\echo Remember to remove old_plans table, and old_plans schema.
+\echo Re-creating views
+
+\i patch-008.sql
+
+\echo Remember to remove old_plans schema, and public.old_plans table.
+\echo To do it, you can run:
+\echo DROP SCHEMA old_plans CASCADE;
+\echo DROP TABLE public.old_plans;
 
 --- vim: set filetype=sql textwidth=132:
