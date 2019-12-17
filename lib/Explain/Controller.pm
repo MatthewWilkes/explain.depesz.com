@@ -235,7 +235,7 @@ sub index {
         $self->app->log->info( $EVAL_ERROR );
 
         # leave...
-        return $self->render( message => q|Failed to parse your plan| );
+        return $self->render( 'message' => q|Failed to parse your plan:|, 'details' => $EVAL_ERROR );
     }
 
     # save to database

@@ -9,6 +9,9 @@
 % if ( stash( 'message' ) ) {
     <div class="message">
     <p class="message"><%= stash( 'message' ) =%></p>
+    % if ( stash( 'details' ) ) {
+        <p class="details"><%= stash( 'details' ) =%></p>
+    % }
     <p class="hint">You might want to <a href="<%= url_for 'contact' %>">contact</a> me if you think that the problem is on <a href="http://explain.depesz.com/">explain.depesz.com</a> side.</p>
     </div>
 % }
