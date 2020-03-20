@@ -206,6 +206,9 @@
                         % elsif ( $node->type =~ m{^(Parallel )?Seq Scan$} ) {
                             on <%= $node->scan_on->{ table_name } %> <%= $node->scan_on->{ table_alias } || '' %>
                         % }
+                        % elsif ( $node->type =~ m{^(Parallel )?Tid Scan$} ) {
+                            on <%= $node->scan_on->{ table_name } %> <%= $node->scan_on->{ table_alias } || '' %>
+                        % }
                         % elsif ( ( 'Insert' eq $node->type ) && ( $node->scan_on ) ) {
                             on <%= $node->scan_on->{ table_name } %> <%= $node->scan_on->{ table_alias } || '' %>
                         % }
